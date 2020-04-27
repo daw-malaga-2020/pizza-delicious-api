@@ -20,7 +20,11 @@ const ordersRoutes = require('./routes/orders')
 const contactsRoutes = require('./routes/contacts')
 
 //crea variables globales para escribir/leer los datos desde cualquier sitio
-app.set("products", [])
+app.set("products", [
+  {id: 1, category: "pizza", title: "Pizza simple", img: "images/pizza-1.jpg", desc: "Esta es una pizza simple", price: 10},
+  {id: 1, category: "pizza", title: "Pizza simple", img: "images/pizza-2.jpg", desc: "Esta es una pizza simple", price: 10},
+  {id: 2, category: "pasta", title: "Macarrones boloñesa ", img: "images/pizza-2.jpg", desc: "Esta es una pizza de Jamón York", price: 9}
+])
 app.set("articles", [])
 //inicia usuario de pruebas
 app.set("users", [{
