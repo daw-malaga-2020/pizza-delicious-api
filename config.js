@@ -1,9 +1,6 @@
 // config.js
-const envs = {}
 
-try {
-  require.resolve('mocha')
-
+if (process.env.NODE_ENV !== 'production') {
   const dotenv = require('dotenv')
   const result = dotenv.config()
 
@@ -12,12 +9,8 @@ try {
   }
 
   const envs = result.parsed
-} catch(e) {
-  envs = {
-    process.env.
-    process.env.
-  }
+
+
+} else {
+  module.exports = process.env
 }
-
-
-module.exports = envs
