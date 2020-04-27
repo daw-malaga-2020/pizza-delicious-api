@@ -1,0 +1,27 @@
+{
+  "name": "pizza-delicious-tdd-mock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "dev": "nodemon index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-bearer-token": "^2.4.0",
+    "faker": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "md5": "^2.2.1",
+    "slugify": "^1.4.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^7.1.1",
+    "nodemon": "^2.0.3"
+  }
+}
