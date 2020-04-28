@@ -1,5 +1,4 @@
 // config.js
-
 if (process.env.NODE_ENV !== 'production') {
   const dotenv = require('dotenv')
   const result = dotenv.config()
@@ -10,7 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 
   const envs = result.parsed
 
-
-} else {
+  module.exports = envs
+}else{
   module.exports = process.env
 }
