@@ -10,7 +10,7 @@ const app = express()
 //configuramos middlewares usados
 app.use(bearerToken())
 app.use(express.json())
-app.user(cors())
+app.use(cors())
 
 //traemos las rutas de ficheros externos
 const productsRoutes = require('./routes/products')
