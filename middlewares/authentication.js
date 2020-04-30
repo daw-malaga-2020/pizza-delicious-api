@@ -1,6 +1,7 @@
 'use strict'
 
 const config = require('../config')
+const jwt = require('jsonwebtoken')
 const defaultUserProfile = 'user'
 
 function authenticationVerify(allowedProfiles, authRequired = true) {
