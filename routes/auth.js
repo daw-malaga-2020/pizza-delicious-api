@@ -17,8 +17,6 @@ router.route('/auth/login')
       return
     }
 
-    delete foundItem.password
-
     let jwtPayload = {
       id: foundItem.id,
       firstname: foundItem.firstname,
