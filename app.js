@@ -12,6 +12,10 @@ app.use(bearerToken())
 app.use(express.json())
 app.use(cors())
 
+//Init Data
+const initProducts = require('./data/products.json')
+const initArticles = require('./data/articles.json')
+
 //traemos las rutas de ficheros externos
 const productsRoutes = require('./routes/products')
 const usersRoutes = require('./routes/users')
@@ -20,29 +24,9 @@ const articlesRoutes = require('./routes/articles')
 const ordersRoutes = require('./routes/orders')
 const contactsRoutes = require('./routes/contacts')
 
-const baseAssets = "https://colorlib.com/preview/theme/pizza"
-
 //crea variables globales para escribir/leer los datos desde cualquier sitio
-app.set("products", [
-  {id: 1, category: "pizza", title: "Pizza 1", image: `${baseAssets}/images/pizza-1.jpg`, desc: "Esta es una pizza 1", price: 10},
-  {id: 2, category: "pizza", title: "Pizza 2", image: `${baseAssets}/images/pizza-2.jpg`, desc: "Esta es una pizza 2", price: 9},
-  {id: 3, category: "pizza", title: "Pizza 3", image: `${baseAssets}/images/pizza-3.jpg`, desc: "Esta es una pizza 3", price: 7},
-  {id: 4, category: "pizza", title: "Pizza 4", image: `${baseAssets}/images/pizza-4.jpg`, desc: "Esta es una pizza 4", price: 11},
-  {id: 5, category: "pizza", title: "Pizza 5", image: `${baseAssets}/images/pizza-5.jpg`, desc: "Esta es una pizza 5", price: 15},
-  {id: 6, category: "pizza", title: "Pizza 6", image: `${baseAssets}/images/pizza-6.jpg`, desc: "Esta es una pizza 6", price: 6},
-  {id: 7, category: "pizza", title: "Pizza 7", image: `${baseAssets}/images/pizza-7.jpg`, desc: "Esta es una pizza 7", price: 9},
-  {id: 8, category: "pizza", title: "Pizza 8", image: `${baseAssets}/images/pizza-8.jpg`, desc: "Esta es una pizza 8", price: 10},
-  {id: 9, category: "pasta", title: "Pasta 1 ",image: `${baseAssets}/images/pasta-1.jpg`, desc: "Esta es pasta 1", price: 9},
-  {id: 10, category:"pasta", title: "Pasta 2 ",image: `${baseAssets}/images/pasta-2.jpg`, desc: "Esta es pasta 2", price: 9},
-  {id: 11, category:"pasta", title: "Pasta 3 ",image: `${baseAssets}/images/pasta-3.jpg`, desc: "Esta es pasta 3", price: 9},
-  {id: 12, category:"drink", title: "Bebida 1 ",image:`${baseAssets}/images/drink-1.jpg`, desc: "Esta es bebida 1", price: 4},
-  {id: 12, category:"drink", title: "Bebida 2 ",image:`${baseAssets}/images/drink-2.jpg`, desc: "Esta es bebida 2", price: 4},
-  {id: 13, category:"drink", title: "Bebida 3 ",image:`${baseAssets}/images/drink-3.jpg`,desc: "Esta es bebida 3", price: 3},
-  {id: 15, category:"burger", title: "Burger 1 ",image: `${baseAssets}/images/burger-1.jpg`, desc: "Esta es burger 1", price: 9},
-  {id: 16, category:"burger", title: "Burger 2 ",image: `${baseAssets}/images/burger-2.jpg`, desc: "Esta es burger 2", price: 9},
-  {id: 17, category:"burger", title: "Burger 3 ",image: `${baseAssets}/images/burger-3.jpg`, desc: "Esta es burger 3", price: 9},
-])
-app.set("articles", [])
+app.set("products", initProducts.data)
+app.set("articles", initArticles.data)
 //inicia usuario de pruebas
 app.set("users", [{
   id: 1,
