@@ -31,6 +31,30 @@
       "status": 1,
       "created_at": 1588533971,
       "delivery_at": null
+    },
+    {
+      "id": 2,
+      "total": 10,
+      "products": [
+        {
+          "id": 1,
+          "quantity": 1,
+          "category": "pizza",
+          "title": "Pizza 1",
+          "image": "https://colorlib.com/preview/theme/pizza/images/pizza-1.jpg",
+          "price": 10
+        }
+      ],
+      "user": {
+        "id": 1,
+        "name": "Juan Manuel",
+        "lastname": "Castillo",
+        "address": "The end 666",
+        "phone": "600 000 000"
+      },
+      "status": 1,
+      "created_at": 1588533271,
+      "delivery_at": null
     }
   ]
 }
