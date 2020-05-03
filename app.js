@@ -15,7 +15,7 @@ app.use(cors())
 //Init Data
 const initProducts = require('./data/products.json')
 const initArticles = require('./data/articles.json')
-const initOrders = require('./data/orders.json.json')
+const initOrders = require('./data/orders.json')
 
 //traemos las rutas de ficheros externos
 const productsRoutes = require('./routes/products')
