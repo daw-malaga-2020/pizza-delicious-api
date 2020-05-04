@@ -58,6 +58,7 @@ router.route('/users/:id')
       return
     }
 
+    foundItem = {...foundItem}
     delete foundItem.password
 
     res.json(foundItem)
@@ -85,6 +86,7 @@ router.route('/users/:id')
     userList[foundItemIndex] = updatedItem
     req.app.set('users', userList)
 
+    updatedItem = { ...updatedItem }
     delete updatedItem.password
 
     res.json(updatedItem)
