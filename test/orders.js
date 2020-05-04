@@ -127,7 +127,7 @@ describe('orders', () => {
             expect(res).to.have.status(201)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
             expect(res.body).to.have.property('id').to.be.greaterThan(0)
-            expect(res.body).to.have.property('dated_at')
+            expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
             expect(res.body).to.have.property('user').to.be.an('object')
@@ -211,7 +211,7 @@ describe('orders', () => {
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
             expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
-            expect(res.body).to.have.property('dated_at')
+            expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
             expect(res.body).to.have.property('user').to.be.an('object')
@@ -239,7 +239,7 @@ describe('orders', () => {
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
             expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
-            expect(res.body).to.have.property('dated_at')
+            expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
             expect(res.body).to.have.property('user').to.be.an('object')
@@ -367,7 +367,7 @@ describe('orders', () => {
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
             expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
-            expect(res.body).to.have.property('dated_at')
+            expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.not.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
             expect(res.body).to.have.property('user').to.be.an('object')
@@ -444,7 +444,6 @@ function createNewItem() {
     'products': buyedItems,
     'total': buyedItemsTotal,
     'status': 1,
-    'dated_at': faker.date.recent(1),
     'shipped_at': null
   }
 }
