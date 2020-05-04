@@ -1,8 +1,14 @@
 'use strict'
 
-const config = require('../config')
+const config = require('../modules/config')
 const jwt = require('jsonwebtoken')
 const defaultUserProfile = 'user'
+
+//ejemplos de llamada al middleware configurable
+//authenticationVerify('admin',true)
+//authenticationVerify(['admin'],true)
+//authenticationVerify(['admin', 'moderator'],true)
+//authenticationVerify(['admin', 'moderator'])
 
 function authenticationVerify(allowedProfiles, authRequired = true) {
   return (req, res, next) => {
@@ -14,20 +20,22 @@ function authenticationVerify(allowedProfiles, authRequired = true) {
     }
 
     if (!req.token) {
-      res.status(403).json({ 'message': 'Debes estar autenticado para usar este método' })
+      res.status(401).json({ 'message': 'Debes estar autenticado para usar este método' })
       return
     }
 
     jwt.verify(req.token, config.APP_SECRET, (err, tokenData) => {
 
       if (err) {
-        res.status(403).json({ 'message': 'El token recibido no es válido' })
+        res.status(401).json({ 'message': 'La sesión ha sido cerrado. Identifícate de nuevo.' })
+        return
       }
 
       let userProfile = tokenData.profile || defaultUserProfile
 
       if (!isAllowedProfile(userProfile, allowedProfiles)) {
         res.status(403).json({ 'message': 'No tienes permisos suficientes' })
+        return
       }
 
       //guarda la información del token en

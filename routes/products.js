@@ -8,12 +8,13 @@ const methodAllowedOnlyForAdmins = authMiddleware(['admin'], true)
 
 router.route('/products')
   .get((req, res) => {
+    //REQUEST >> bearerToken >> express.json >> propio middleware de la ruta >> RESPONSE
     let itemList = req.app.get('products')
 
     res.json(itemList)
   })
   .post(methodAllowedOnlyForAdmins, (req, res) => {
-
+    //REQUEST >> bearerToken >> express.json >> methodAllowedOnlyForAdmins >> propio middleware de la ruta >> RESPONSE
     let itemList = req.app.get('products')
 
     let newItem = { ...{ id: itemList.length + 1 }, ...req.body }
@@ -27,7 +28,7 @@ router.route('/products')
 
 router.route('/products/:id')
   .get((req, res) => {
-
+    //REQUEST >> bearerToken >> express.json >> propio middleware de la ruta >> RESPONSE
     let itemList = req.app.get('products')
     let searchId = parseInt(req.params.id)
 
@@ -41,7 +42,7 @@ router.route('/products/:id')
     res.json(foundItem)
   })
   .put(methodAllowedOnlyForAdmins, (req, res) => {
-
+    //REQUEST >> bearerToken >> express.json >> methodAllowedOnlyForAdmins >> propio middleware de la ruta >> RESPONSE
     let itemList = req.app.get('products')
     let searchId = parseInt(req.params.id)
 
@@ -62,7 +63,7 @@ router.route('/products/:id')
     res.json(updatedItem)
   })
   .delete(methodAllowedOnlyForAdmins, (req, res) => {
-
+    //REQUEST >> bearerToken >> express.json >> methodAllowedOnlyForAdmins >> propio middleware de la ruta >> RESPONSE
     let itemList = req.app.get('products')
     let searchId = parseInt(req.params.id)
 
@@ -74,7 +75,7 @@ router.route('/products/:id')
     }
 
     itemList.splice(foundItemIndex, 1)
-    req.app.get('products', itemList)
+    req.app.set('products', itemList)
 
     res.status(204).json()
   })

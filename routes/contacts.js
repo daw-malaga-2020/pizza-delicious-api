@@ -1,5 +1,11 @@
+'use strict'
+
 const express = require('express')
 const router = express.Router()
+
+const mailer = require('../modules/mailer')
+const config = require('../modules/config')
+
 //middleware configurable para autenticación
 const authMiddleware = require('../middlewares/authentication')
 
@@ -20,6 +26,7 @@ router.route('/contacts')
     itemList.push(newItem)
     req.app.set('contacts', itemList)
 
+    mailer.send(config.ADMIN_EMAIL,config.CONTACT_SUBJECT,config.CONTACT_BODY, false)
 
     res.status(201).json(newItem)
   })
@@ -52,7 +59,7 @@ router.route('/contacts/:id')
     }
 
     itemList.splice(foundItemIndex, 1)
-    req.app.get('contacts', itemList)
+    req.app.set('contacts', itemList)
 
     res.status(204).json()
   })
