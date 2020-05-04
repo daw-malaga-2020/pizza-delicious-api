@@ -21,7 +21,7 @@ router.route('/users')
 
     res.json(userList)
   })
-  .post(methodAllowedForUsersAndAdmins, (req, res) => {
+  .post((req, res) => {
 
     let userList = req.app.get('users')
 
