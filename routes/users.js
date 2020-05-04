@@ -33,6 +33,8 @@ router.route('/users')
     userList.push(newItem)
     req.app.set('users', userList)
 
+    newItem = {...newItem}
+
     delete newItem.password
 
     res.status(201).json(newItem)
