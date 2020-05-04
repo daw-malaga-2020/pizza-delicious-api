@@ -12,8 +12,8 @@
     {"id": 10, "category":"pasta", "title": "Pasta 2 ","image": "https://colorlib.com/preview/theme/pizza/images/pasta-2.jpg", "desc": "Esta es pasta 2", "price": 9},
     {"id": 11, "category":"pasta", "title": "Pasta 3 ","image": "https://colorlib.com/preview/theme/pizza/images/pasta-3.jpg", "desc": "Esta es pasta 3", "price": 9},
     {"id": 12, "category":"drink", "title": "Bebida 1 ","image":"https://colorlib.com/preview/theme/pizza/images/drink-1.jpg", "desc": "Esta es bebida 1", "price": 4},
-    {"id": 12, "category":"drink", "title": "Bebida 2 ","image":"https://colorlib.com/preview/theme/pizza/images/drink-2.jpg", "desc": "Esta es bebida 2", "price": 4},
-    {"id": 13, "category":"drink", "title": "Bebida 3 ","image":"https://colorlib.com/preview/theme/pizza/images/drink-3.jpg","desc": "Esta es bebida 3", "price": 3},
+    {"id": 13, "category":"drink", "title": "Bebida 2 ","image":"https://colorlib.com/preview/theme/pizza/images/drink-2.jpg", "desc": "Esta es bebida 2", "price": 4},
+    {"id": 14, "category":"drink", "title": "Bebida 3 ","image":"https://colorlib.com/preview/theme/pizza/images/drink-3.jpg","desc": "Esta es bebida 3", "price": 3},
     {"id": 15, "category":"burger", "title": "Burger 1 ","image": "https://colorlib.com/preview/theme/pizza/images/burger-1.jpg", "desc": "Esta es burger 1", "price": 9},
     {"id": 16, "category":"burger", "title": "Burger 2 ","image": "https://colorlib.com/preview/theme/pizza/images/burger-2.jpg", "desc": "Esta es burger 2", "price": 9},
     {"id": 17, "category":"burger", "title" : "Burger 3 ","image": "https://colorlib.com/preview/theme/pizza/images/burger-3.jpg", "desc": "Esta es burger 3", "price": 9}
