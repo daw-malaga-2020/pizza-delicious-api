@@ -4,6 +4,7 @@
 const express = require('express')
 const bearerToken = require('express-bearer-token')
 const cors = require("cors");
+const database = require('./modules/database')
 //instancia de express
 const app = express()
 
@@ -25,31 +26,8 @@ const articlesRoutes = require('./routes/articles')
 const ordersRoutes = require('./routes/orders')
 const contactsRoutes = require('./routes/contacts')
 
-//crea variables globales para escribir/leer los datos desde cualquier sitio
-app.set("products", initProducts.data)
-app.set("articles", initArticles.data)
-//inicia usuario de pruebas
-app.set("users", [{
-  id: 1,
-  firstname: 'Juan Manuel',
-  lastname: 'Castillo',
-  email: 'juanma@test.es',
-  password: '098f6bcd4621d373cade4e832627b4f6',
-  profile: 'admin',
-  enabled: true
-},
-{
-  id: 2,
-  firstname: 'Alex',
-  lastname: 'Martín',
-  email: 'alex@test.es',
-  password: '098f6bcd4621d373cade4e832627b4f6',
-  profile: 'user',
-  enabled: true
-}])
 //contraseña: test
 app.set("orders", initOrders.data)
-app.set("contacts", [])
 
 //enganchamos las rutas
 app.use(productsRoutes)
@@ -58,6 +36,8 @@ app.use(authRoutes)
 app.use(articlesRoutes)
 app.use(ordersRoutes)
 app.use(contactsRoutes)
+
+database.connect()
 
 //exponemos la instancia configurada de la app
 module.exports = app

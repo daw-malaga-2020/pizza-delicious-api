@@ -96,7 +96,7 @@ describe('contacts', () => {
             //1. comprobamos la respuesta
             expect(res).to.have.status(201)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.greaterThan(0)
+            expect(res.body).to.have.property('_id').to.be.an('string')
             expect(res.body).to.have.property('full_name').to.be.equal(newItemRef.full_name)
             expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
             expect(res.body).to.have.property('subject').to.be.equal(newItemRef.subject)
@@ -133,7 +133,7 @@ describe('contacts', () => {
             //1. comprobamos la respuesta
             expect(res).to.have.status(201)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.greaterThan(0)
+            expect(res.body).to.have.property('_id').to.be.an('string')
             expect(res.body).to.have.property('full_name').to.be.equal(newItemRef.full_name)
             expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
             expect(res.body).to.have.property('subject').to.be.equal(newItemRef.subject)
@@ -169,7 +169,7 @@ describe('contacts', () => {
             //1. comprobamos la respuesta
             expect(res).to.have.status(201)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.greaterThan(0)
+            expect(res.body).to.have.property('_id').to.be.an('string')
             expect(res.body).to.have.property('full_name').to.be.equal(newItemRef.full_name)
             expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
             expect(res.body).to.have.property('subject').to.be.equal(newItemRef.subject)
@@ -192,7 +192,7 @@ describe('contacts', () => {
       it('Should return status 401 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/contacts/' + newItemRef.id)
+          .get('/contacts/' + newItemRef._id)
           .end((err, res) => {
 
             if (err) {
@@ -213,7 +213,7 @@ describe('contacts', () => {
       it('Should return status 403 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/contacts/' + newItemRef.id)
+          .get('/contacts/' + newItemRef._id)
           .set('Authorization', tokens.user)
           .end((err, res) => {
 
@@ -235,7 +235,7 @@ describe('contacts', () => {
       it('Should return status 200 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/contacts/' + newItemRef.id)
+          .get('/contacts/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .end((err, res) => {
 
@@ -246,7 +246,7 @@ describe('contacts', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('full_name').to.be.equal(newItemRef.full_name)
             expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
             expect(res.body).to.have.property('subject').to.be.equal(newItemRef.subject)
@@ -266,7 +266,7 @@ describe('contacts', () => {
       it('Should return status 401 and json as default data format', function (done) {
 
         chai.request(app)
-          .delete('/contacts/' + newItemRef.id)
+          .delete('/contacts/' + newItemRef._id)
           .end((err, res) => {
 
             if (err) {
@@ -286,7 +286,7 @@ describe('contacts', () => {
       it('Should return status 403 and json as default data format', function (done) {
 
         chai.request(app)
-          .delete('/contacts/' + newItemRef.id)
+          .delete('/contacts/' + newItemRef._id)
           .set('Authorization', tokens.user)
           .end((err, res) => {
 
@@ -307,7 +307,7 @@ describe('contacts', () => {
       it('Should return status 204 and json as default data format', function (done) {
 
         chai.request(app)
-          .delete('/contacts/' + newItemRef.id)
+          .delete('/contacts/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .end((err, res) => {
 

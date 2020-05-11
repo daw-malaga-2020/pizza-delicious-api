@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const Products = require('../models/products')
 //middleware configurable para autenticación
 const authMiddleware = require('../middlewares/authentication')
 
@@ -7,32 +8,25 @@ const authMiddleware = require('../middlewares/authentication')
 const methodAllowedOnlyForAdmins = authMiddleware(['admin'], true)
 
 router.route('/products')
-  .get((req, res) => {
-    //REQUEST >> bearerToken >> express.json >> propio middleware de la ruta >> RESPONSE
-    let itemList = req.app.get('products')
+  .get(async (req, res) => {
+    let itemList = await Products.find().exec()
 
     res.json(itemList)
   })
-  .post(methodAllowedOnlyForAdmins, (req, res) => {
+  .post(methodAllowedOnlyForAdmins, async (req, res) => {
     //REQUEST >> bearerToken >> express.json >> methodAllowedOnlyForAdmins >> propio middleware de la ruta >> RESPONSE
-    let itemList = req.app.get('products')
 
-    let newItem = { ...{ id: itemList.length + 1 }, ...req.body }
-
-    itemList.push(newItem)
-    req.app.set('products', itemList)
-
+    let newItem = await new Products(req.body).save()
 
     res.status(201).json(newItem)
   })
 
 router.route('/products/:id')
-  .get((req, res) => {
+  .get(async (req, res) => {
     //REQUEST >> bearerToken >> express.json >> propio middleware de la ruta >> RESPONSE
-    let itemList = req.app.get('products')
-    let searchId = parseInt(req.params.id)
+    let searchId = req.params.id
 
-    let foundItem = itemList.find(item => item.id === searchId)
+    let foundItem = await Products.findById(searchId).exec()
 
     if (!foundItem) {
       res.status(404).json({ 'message': 'El elemento que intentas obtener no existe' })
@@ -41,43 +35,32 @@ router.route('/products/:id')
 
     res.json(foundItem)
   })
-  .put(methodAllowedOnlyForAdmins, (req, res) => {
+  .put(methodAllowedOnlyForAdmins, async (req, res) => {
     //REQUEST >> bearerToken >> express.json >> methodAllowedOnlyForAdmins >> propio middleware de la ruta >> RESPONSE
-    let itemList = req.app.get('products')
-    let searchId = parseInt(req.params.id)
+    let searchId = req.params.id
 
-    let foundItemIndex = itemList.findIndex(item => item.id === searchId)
+    let updatedItem = await Products.findOneAndUpdate({_id: searchId}, req.body, {new: true}).exec()
 
-    if (foundItemIndex === -1) {
+    if (!updatedItem) {
       res.status(404).json({ 'message': 'El elemento que intentas editar no existe' })
       return
     }
 
-    let updatedItem = itemList[foundItemIndex]
-
-    updatedItem = { ...updatedItem, ...req.body }
-
-    itemList[foundItemIndex] = updatedItem
-    req.app.set('products', itemList)
-
     res.json(updatedItem)
   })
-  .delete(methodAllowedOnlyForAdmins, (req, res) => {
+  .delete(methodAllowedOnlyForAdmins, async (req, res) => {
     //REQUEST >> bearerToken >> express.json >> methodAllowedOnlyForAdmins >> propio middleware de la ruta >> RESPONSE
-    let itemList = req.app.get('products')
-    let searchId = parseInt(req.params.id)
+    let searchId = req.params.id
 
-    let foundItemIndex = itemList.findIndex(item => item.id === searchId)
+    let foundItem = await Products.findOneAndDelete({_id: searchId}).exec()
 
-    if (foundItemIndex === -1) {
+    if (!foundItem) {
       res.status(404).json({ 'message': 'El elemento que intentas eliminar no existe' })
       return
     }
 
-    itemList.splice(foundItemIndex, 1)
-    req.app.set('products', itemList)
-
     res.status(204).json()
+
   })
 
 module.exports = router

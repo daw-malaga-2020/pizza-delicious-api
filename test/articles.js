@@ -149,7 +149,7 @@ describe('articles', () => {
             //1. comprobamos la respuesta
             expect(res).to.have.status(201)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.greaterThan(0)
+            expect(res.body).to.have.property('_id').to.be.an('string')
             expect(res.body).to.have.property('title').to.be.equal(newItemRef.title)
             expect(res.body).to.have.property('slug').to.be.equal(newItemRef.slug)
             expect(res.body).to.have.property('excerpt').to.be.equal(newItemRef.excerpt)
@@ -174,7 +174,7 @@ describe('articles', () => {
       it('Should return status 200 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/articles/' + newItemRef.id)
+          .get('/articles/' + newItemRef._id)
           .end((err, res) => {
 
             if (err) {
@@ -184,7 +184,7 @@ describe('articles', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('title').to.be.equal(newItemRef.title)
             expect(res.body).to.have.property('slug').to.be.equal(newItemRef.slug)
             expect(res.body).to.have.property('excerpt').to.be.equal(newItemRef.excerpt)
@@ -201,7 +201,7 @@ describe('articles', () => {
       it('Should return status 200 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/articles/' + newItemRef.id)
+          .get('/articles/' + newItemRef._id)
           .set('Authorization', tokens.user)
           .end((err, res) => {
 
@@ -212,7 +212,7 @@ describe('articles', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('title').to.be.equal(newItemRef.title)
             expect(res.body).to.have.property('slug').to.be.equal(newItemRef.slug)
             expect(res.body).to.have.property('excerpt').to.be.equal(newItemRef.excerpt)
@@ -229,7 +229,7 @@ describe('articles', () => {
       it('Should return status 200 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/articles/' + newItemRef.id)
+          .get('/articles/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .end((err, res) => {
 
@@ -240,7 +240,7 @@ describe('articles', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('title').to.be.equal(newItemRef.title)
             expect(res.body).to.have.property('slug').to.be.equal(newItemRef.slug)
             expect(res.body).to.have.property('excerpt').to.be.equal(newItemRef.excerpt)
@@ -263,7 +263,7 @@ describe('articles', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/articles/' + newItemRef.id)
+          .put('/articles/' + newItemRef._id)
           .send(editedItemRef)
           .end((err, res) => {
 
@@ -287,7 +287,7 @@ describe('articles', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/articles/' + newItemRef.id)
+          .put('/articles/' + newItemRef._id)
           .set('Authorization', tokens.user)
           .send(editedItemRef)
           .end((err, res) => {
@@ -312,7 +312,7 @@ describe('articles', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/articles/' + newItemRef.id)
+          .put('/articles/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .send(editedItemRef)
           .end((err, res) => {
@@ -324,7 +324,7 @@ describe('articles', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('title').to.be.equal(newItemRef.title)
             expect(res.body).to.have.property('slug').to.be.equal(newItemRef.slug)
             expect(res.body).to.have.property('excerpt').to.be.equal(newItemRef.excerpt)
@@ -365,7 +365,7 @@ describe('articles', () => {
       it('Should return status 403 and json as default data format', function (done) {
 
         chai.request(app)
-          .delete('/articles/' + newItemRef.id)
+          .delete('/articles/' + newItemRef._id)
           .set('Authorization',tokens.user)
           .end((err, res) => {
 
@@ -386,7 +386,7 @@ describe('articles', () => {
       it('Should return status 200 and json as default data format', function (done) {
 
         chai.request(app)
-          .delete('/articles/' + newItemRef.id)
+          .delete('/articles/' + newItemRef._id)
           .set('Authorization',tokens.admin)
           .end((err, res) => {
 

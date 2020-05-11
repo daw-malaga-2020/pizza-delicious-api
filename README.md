@@ -29,3 +29,22 @@ De momento para hacer test con diferentes niveles de usuarios no hay test autom�
 Los métodos DELETE /orders y PUT /contacts/:id no existen dado que el diseño de la API así lo prohible. Se podría haber creado 2 test en concreto que verificaran que al llamar a esos métodos devuelve sendos errores 404.
 
 Se ha limitado mediante un middleware configurable el acceso a diferentes métodos pero únicamente en aquellos que haga falta. El middleware permite interceptar la petición, comprobar si es necesario que haya un usuario autenticado (reciba un token) y que el perfil que tiene es uno de los permitidos para dicha acción.
+
+[{
+  id: 1,
+  firstname: 'Juan Manuel',
+  lastname: 'Castillo',
+  email: 'juanma@test.es',
+  password: '098f6bcd4621d373cade4e832627b4f6',
+  profile: 'admin',
+  enabled: true
+},
+{
+  id: 2,
+  firstname: 'Alex',
+  lastname: 'Martín',
+  email: 'alex@test.es',
+  password: '098f6bcd4621d373cade4e832627b4f6',
+  profile: 'user',
+  enabled: true
+}]

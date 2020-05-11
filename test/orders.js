@@ -39,7 +39,7 @@ describe('orders', () => {
 
     describe('AS USER', () => {
       it('Should return status 200 and json as default data format only (owneds orders)', (done) => {
-        //todo: check que todos los pedidos son los del propio usuario
+        //todo: check que todos los ped_idos son los del propio usuario
         chai.request(app)
           .get('/orders')
           .set('Authorization', tokens.user)
@@ -126,7 +126,7 @@ describe('orders', () => {
             //1. comprobamos la respuesta
             expect(res).to.have.status(201)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.greaterThan(0)
+            expect(res.body).to.have.property('_id').to.be.an('string')
             expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
@@ -178,7 +178,7 @@ describe('orders', () => {
       it('Should return status 401 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/orders/' + newItemRef.id)
+          .get('/orders/' + newItemRef._id)
           .end((err, res) => {
 
             if (err) {
@@ -199,7 +199,7 @@ describe('orders', () => {
       it('Should return status 200 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/orders/' + newItemRef.id)
+          .get('/orders/' + newItemRef._id)
           .set('Authorization', tokens.user)
           .end((err, res) => {
 
@@ -210,7 +210,7 @@ describe('orders', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
@@ -227,7 +227,7 @@ describe('orders', () => {
       it('Should return status 200 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/orders/' + newItemRef.id)
+          .get('/orders/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .end((err, res) => {
 
@@ -238,7 +238,7 @@ describe('orders', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
@@ -260,7 +260,7 @@ describe('orders', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/orders/' + newItemRef.id)
+          .put('/orders/' + newItemRef._id)
           .send(editedItemRef)
           .end((err, res) => {
 
@@ -282,7 +282,7 @@ describe('orders', () => {
         editedItemStatusRef = modifyItemStatus(newItemRef)
 
         chai.request(app)
-          .put('/orders/' + newItemRef.id + '/status')
+          .put('/orders/' + newItemRef._id + '/status')
           .send(editedItemStatusRef)
           .end((err, res) => {
 
@@ -306,7 +306,7 @@ describe('orders', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/orders/' + newItemRef.id)
+          .put('/orders/' + newItemRef._id)
           .set('Authorization', tokens.user)
           .send(editedItemRef)
           .end((err, res) => {
@@ -329,7 +329,7 @@ describe('orders', () => {
         editedItemStatusRef = modifyItemStatus(newItemRef)
 
         chai.request(app)
-          .put('/orders/' + newItemRef.id + '/status')
+          .put('/orders/' + newItemRef._id + '/status')
           .set('Authorization', tokens.user)
           .send(editedItemStatusRef)
           .end((err, res) => {
@@ -354,7 +354,7 @@ describe('orders', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/orders/' + newItemRef.id)
+          .put('/orders/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .send(editedItemRef)
           .end((err, res) => {
@@ -366,7 +366,7 @@ describe('orders', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('created_at')
             expect(res.body).to.have.property('shipped_at').to.be.not.equal(null)
             expect(res.body).to.have.property('products').to.be.an('array')
@@ -386,7 +386,7 @@ describe('orders', () => {
         editedItemStatusRef = modifyItemStatus(newItemRef)
 
         chai.request(app)
-          .put('/orders/' + newItemRef.id + '/status')
+          .put('/orders/' + newItemRef._id + '/status')
           .set('Authorization', tokens.admin)
           .send(editedItemStatusRef)
           .end((err, res) => {
@@ -409,7 +409,7 @@ describe('orders', () => {
 })
 
 function createNewItem() {
-  let categoryList = ['Pizzas', 'Bebidas', 'Hamburguesas', 'Ensaladas']
+  let categoryList = ['Pizzas', 'Beb_idas', 'Hamburguesas', 'Ensaladas']
   let gender = faker.random.boolean()
 
   let buyedItemsCount = faker.random.number(4) + 1
@@ -434,7 +434,7 @@ function createNewItem() {
 
   return {
     'user': {
-      'id': 2,
+      'id': '5eb91e641efcbe6642622d2c',
       'firstname': faker.name.firstName(gender),
       'lastname': faker.name.lastName(gender),
       'address': faker.address.streetAddress(true),

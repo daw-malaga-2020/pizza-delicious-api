@@ -13,8 +13,9 @@ const expect = chai.expect
 
 chai.use(chaiHttp)
 
-let getUserId = 2
+let getUserId = '5eb91e641efcbe6642622d2c'
 let newItemRef = null
+let altItemRef = null
 let editedItemRef = null
 
 describe('users', () => {
@@ -83,6 +84,7 @@ describe('users', () => {
     it('Should return status 201 and json as default data format', (done) => {
 
       newItemRef = createNewItem()
+      altItemRef = createNewItem()
 
       chai.request(app)
         .post('/users')
@@ -97,7 +99,7 @@ describe('users', () => {
           //1. comprobamos la respuesta
           expect(res).to.have.status(201)
           expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-          expect(res.body).to.have.property('id').to.be.greaterThan(0)
+          expect(res.body).to.have.property('_id').to.be.an('string')
           expect(res.body).to.have.property('firstname').to.be.equal(newItemRef.firstname)
           expect(res.body).to.have.property('lastname').to.be.equal(newItemRef.lastname)
           expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
@@ -115,6 +117,38 @@ describe('users', () => {
         })
     })
 
+    it('Should return status 201 and json as default data format', (done) => {
+      chai.request(app)
+        .post('/users')
+        .send(altItemRef)
+        .end((err, res) => {
+
+          if (err) {
+            console.error(err)
+            done()
+          }
+
+          //1. comprobamos la respuesta
+          expect(res).to.have.status(201)
+          expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
+          expect(res.body).to.have.property('_id').to.be.an('string')
+          expect(res.body).to.have.property('firstname').to.be.equal(altItemRef.firstname)
+          expect(res.body).to.have.property('lastname').to.be.equal(altItemRef.lastname)
+          expect(res.body).to.have.property('email').to.be.equal(altItemRef.email)
+          expect(res.body).to.not.have.property('password')
+          expect(res.body).to.have.property('address').to.be.equal(altItemRef.address)
+          expect(res.body).to.have.property('phone').to.be.equal(altItemRef.phone)
+          expect(res.body).to.have.property('profile').to.be.equal(altItemRef.profile)
+          expect(res.body).to.have.property('enabled').to.be.equal(altItemRef.enabled)
+
+          //2. guardamos el resultado para siguientes test
+          altItemRef = res.body
+
+          //2. marcamos como finalizado el test
+          done()
+        })
+    })
+
   })
 
   describe('GET', () => {
@@ -122,7 +156,7 @@ describe('users', () => {
       it('Should return status 401 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/users/' + newItemRef.id)
+          .get('/users/' + newItemRef._id)
           .end((err, res) => {
 
             if (err) {
@@ -153,7 +187,7 @@ describe('users', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(getUserId)
+            expect(res.body).to.have.property('_id').to.be.equal(getUserId)
 
             done()
           })
@@ -164,7 +198,7 @@ describe('users', () => {
       it('Should return status 200 and json as default data format', (done) => {
 
         chai.request(app)
-          .get('/users/' + newItemRef.id)
+          .get('/users/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .end((err, res) => {
 
@@ -175,7 +209,7 @@ describe('users', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
             expect(res.body).to.have.property('firstname').to.be.equal(newItemRef.firstname)
             expect(res.body).to.have.property('lastname').to.be.equal(newItemRef.lastname)
             expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
@@ -199,7 +233,7 @@ describe('users', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/users/' + newItemRef.id)
+          .put('/users/' + newItemRef._id)
           .send(editedItemRef)
           .end((err, res) => {
 
@@ -235,15 +269,7 @@ describe('users', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(getUserId)
-            expect(res.body).to.have.property('firstname').to.be.equal(newItemRef.firstname)
-            expect(res.body).to.have.property('lastname').to.be.equal(newItemRef.lastname)
-            expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
-            expect(res.body).to.not.have.property('password')
-            expect(res.body).to.have.property('address').to.be.equal(newItemRef.address)
-            expect(res.body).to.have.property('phone').to.be.equal(newItemRef.phone)
-            expect(res.body).to.have.property('profile').to.be.equal(newItemRef.profile)
-            expect(res.body).to.have.property('enabled').to.be.equal(newItemRef.enabled)
+            expect(res.body).to.have.property('_id').to.be.equal(getUserId)
 
             done()
           })
@@ -256,7 +282,7 @@ describe('users', () => {
         editedItemRef = modifyItem(newItemRef)
 
         chai.request(app)
-          .put('/users/' + newItemRef.id)
+          .put('/users/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .send(editedItemRef)
           .end((err, res) => {
@@ -268,15 +294,7 @@ describe('users', () => {
 
             expect(res).to.have.status(200)
             expect(res).to.have.header('Content-type', 'application/json; charset=utf-8')
-            expect(res.body).to.have.property('id').to.be.equal(newItemRef.id)
-            expect(res.body).to.have.property('firstname').to.be.equal(newItemRef.firstname)
-            expect(res.body).to.have.property('lastname').to.be.equal(newItemRef.lastname)
-            expect(res.body).to.have.property('email').to.be.equal(newItemRef.email)
-            expect(res.body).to.not.have.property('password')
-            expect(res.body).to.have.property('address').to.be.equal(newItemRef.address)
-            expect(res.body).to.have.property('phone').to.be.equal(newItemRef.phone)
-            expect(res.body).to.have.property('profile').to.be.equal(newItemRef.profile)
-            expect(res.body).to.have.property('enabled').to.be.equal(newItemRef.enabled)
+            expect(res.body).to.have.property('_id').to.be.equal(newItemRef._id)
 
             newItemRef = res.body
 
@@ -293,7 +311,7 @@ describe('users', () => {
       it('Should return status 401 and json as default data format', function (done) {
 
         chai.request(app)
-          .delete('/users/' + newItemRef.id)
+          .delete('/users/' + newItemRef._id)
           .end((err, res) => {
 
             if (err) {
@@ -309,12 +327,12 @@ describe('users', () => {
       })
     })
 
-    describe('AS USER', () => {
+    describe('AS DIFFERENT USER', () => {
 
-      it('Should return status 404 and json as default data format (distinct user)', function (done) {
+      it('Should return status 403 and json as default data format (distinct user)', function (done) {
 
         chai.request(app)
-          .delete('/users/' + newItemRef.id)
+          .delete('/users/' + newItemRef._id)
           .set('Authorization', tokens.user)
           .end((err, res) => {
 
@@ -323,27 +341,8 @@ describe('users', () => {
               done()
             }
 
-            expect(res).to.have.status(404)
+            expect(res).to.have.status(403)
             expect(res.body).to.have.property('message')
-
-            done()
-          })
-      })
-
-      it('Should return status 200 and json as default data format', function (done) {
-
-        chai.request(app)
-          .delete('/users/' + getUserId)
-          .set('Authorization', tokens.user)
-          .end((err, res) => {
-
-            if (err) {
-              console.error(err)
-              done()
-            }
-
-            expect(res).to.have.status(204)
-            expect(res.body).to.be.empty
 
             done()
           })
@@ -354,7 +353,7 @@ describe('users', () => {
       it('Should return status 200 and json as default data format', function (done) {
 
         chai.request(app)
-          .delete('/users/' + newItemRef.id)
+          .delete('/users/' + newItemRef._id)
           .set('Authorization', tokens.admin)
           .end((err, res) => {
 
@@ -390,7 +389,9 @@ function createNewItem() {
   }
 }
 
-function modifyItem(item) {
+function modifyItem() {
+  let item = {}
+
   item.enabled = faker.random.boolean()
   item.profile = faker.random.arrayElement(['user', 'admin'])
   item.password = faker.internet.password(8)
@@ -398,20 +399,4 @@ function modifyItem(item) {
   item.phone = faker.phone.phoneNumber()
 
   return item
-}
-
-function createUserValidToken(userData) {
-  let payload = {
-    id: userData.id,
-    firstname: userData.firstName,
-    profile: userData.profile
-  }
-
-  return jwt.sign(payload, config.APP_SECRET, {
-    expiresIn: config.APP_TOKEN_VALIDITY_IN_DAYS + ' days'
-  })
-}
-
-function getTokenData(token) {
-  return jwt.verify(token, config.APP_SECRET)
 }

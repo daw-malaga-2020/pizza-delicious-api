@@ -5,6 +5,7 @@ const router = express.Router()
 
 const mailer = require('../modules/mailer')
 const config = require('../modules/config')
+const Contact = require('../models/contacts')
 
 //middleware configurable para autenticación
 const authMiddleware = require('../middlewares/authentication')
@@ -13,18 +14,14 @@ const authMiddleware = require('../middlewares/authentication')
 const methodAllowedOnlyForAdmins = authMiddleware(['admin'], true)
 
 router.route('/contacts')
-  .get(methodAllowedOnlyForAdmins, (req, res) => {
-    let itemList = req.app.get('contacts')
+  .get(methodAllowedOnlyForAdmins, async (req, res) => {
+    let itemList = await Contact.find().exec()
+
     res.json(itemList)
   })
-  .post((req, res) => {
+  .post(async (req, res) => {
 
-    let itemList = req.app.get('contacts')
-
-    let newItem = { ...{ id: itemList.length + 1 }, ...req.body }
-
-    itemList.push(newItem)
-    req.app.set('contacts', itemList)
+    let newItem = await new Contact(req.body).save()
 
     mailer.send(config.ADMIN_EMAIL,config.CONTACT_SUBJECT,config.CONTACT_BODY, false)
 
@@ -32,12 +29,11 @@ router.route('/contacts')
   })
 
 router.route('/contacts/:id')
-  .get(methodAllowedOnlyForAdmins, (req, res) => {
+  .get(methodAllowedOnlyForAdmins, async (req, res) => {
 
-    let itemList = req.app.get('contacts')
-    let searchId = parseInt(req.params.id)
+    let searchId = req.params.id
 
-    let foundItem = itemList.find(item => item.id === searchId)
+    let foundItem = await Contact.findById(searchId).exec()
 
     if (!foundItem) {
       res.status(404).json({ 'message': 'El elemento que intentas obtener no existe' })
@@ -46,20 +42,16 @@ router.route('/contacts/:id')
 
     res.json(foundItem)
   })
-  .delete(methodAllowedOnlyForAdmins, (req, res) => {
+  .delete(methodAllowedOnlyForAdmins, async (req, res) => {
 
-    let itemList = req.app.get('contacts')
-    let searchId = parseInt(req.params.id)
+    let searchId = req.params.id
 
-    let foundItemIndex = itemList.findIndex(item => item.id === searchId)
+    let foundItem = await Contact.findOneAndDelete({_id: searchId}).exec()
 
-    if (foundItemIndex === -1) {
+    if (!foundItem) {
       res.status(404).json({ 'message': 'El elemento que intentas eliminar no existe' })
       return
     }
-
-    itemList.splice(foundItemIndex, 1)
-    req.app.set('contacts', itemList)
 
     res.status(204).json()
   })

@@ -4,24 +4,29 @@ const jwt = require('jsonwebtoken')
 const config = require('../modules/config')
 const md5 = require('md5')
 const mailer = require('../modules/mailer')
+const User = require('../models/users')
 
 router.route('/auth/login')
-  .post((req, res) => {
+  .post(async (req, res) => {
 
-    let userList = req.app.get('users') //obtiene de la variable global los usuarios
     let credentials = req.body
 
-    let foundItem = userList.find(item => (item.email === credentials.email && item.password === md5(credentials.password)))
+    let filters = {
+      $and: [
+        { email: credentials.email },
+        { password: md5(credentials.password) }
+      ]
+    }
+
+    let foundItem = await User.findOne(filters).exec()
 
     if (!foundItem) {
       res.status(401).json({ 'message': 'El usuario y/o contraseña son incorrectos' })
       return
     }
 
-    delete foundItem.password
-
     let jwtPayload = {
-      id: foundItem.id,
+      id: foundItem._id,
       firstname: foundItem.firstname,
       profile: foundItem.profile
     }
@@ -38,12 +43,11 @@ router.route('/auth/login')
   })
 
 router.route('/auth/forgotten-password')
-  .post((req, res) => {
+  .post(async (req, res) => {
 
-    let userList = req.app.get('users') //obtiene de la variable global los usuarios
     let searchEmail = req.body.email
 
-    let foundItem = userList.find(item => item.email === searchEmail)
+    let foundItem = await User.findOne({ email: searchEmail })
 
     if (!foundItem) {
       res.status(404).json({ 'message': 'No existe el email en nuestra base de datos' })

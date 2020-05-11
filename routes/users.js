@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const md5 = require('md5')
+const User = require('../models/users')
 //middleware configurable para autenticación
 const authMiddleware = require('../middlewares/authentication')
 
@@ -10,11 +11,11 @@ const methodAllowedOnlyForAdmins = authMiddleware(['admin'], true)
 const methodAllowedForUsersAndAdmins = authMiddleware(['user', 'admin'], true)
 
 router.route('/users')
-  .get(methodAllowedOnlyForAdmins, (req, res) => {
-    let userList = req.app.get('users')
+  .get(methodAllowedOnlyForAdmins, async (req, res) => {
+    let itemList = await User.find().exec()
 
-    filteredList = userList.map((item) => {
-      let clonedItem = { ...item }
+    filteredList = itemList.map((item) => {
+      let clonedItem = { ...item.toJSON() }
 
       delete clonedItem.password
 
@@ -23,97 +24,78 @@ router.route('/users')
 
     res.json(filteredList)
   })
-  .post((req, res) => {
+  .post(async (req, res) => {
 
-    let userList = req.app.get('users')
+    req.body.password = md5(req.body.password)
 
-    let newItem = { ...{ id: userList.length + 1 }, ...req.body }
+    let newItem = await new User(req.body).save()
 
-    //el password se guarda siempre encriptado con un método no reversible (md5, sha512, ...)
-    newItem.password = md5(newItem.password)
+    let createdItem = newItem.toJSON()
+    delete createdItem.password
 
-    userList.push(newItem)
-    req.app.set('users', userList)
-
-    let clonedItem = { ...newItem }
-
-    delete clonedItem.password
-
-    res.status(201).json(clonedItem)
+    res.status(201).json(createdItem)
 
   })
 
 router.route('/users/:id')
-  .get(methodAllowedForUsersAndAdmins, (req, res) => {
+  .get(methodAllowedForUsersAndAdmins, async (req, res) => {
 
-    let userList = req.app.get('users')
-    let searchId = parseInt(req.params.id)
+    let searchId = req.params.id
 
-    let foundItem = userList.find(item => item.id === searchId)
-
-    if (req.user.profile !== 'admin') {
-      foundItem = userList.find(item => item.id === searchId && item.id === req.user.id)
+    if (req.user.profile !== 'admin' && searchId !== req.user.id) {
+      res.status(403).json({ 'message': 'Permisos insuficientes' })
+      return
     }
+
+    let foundItem = await User.findById(searchId).exec()
 
     if (!foundItem) {
-      res.status(404).json({ 'message': 'El elemento que intentas obtener no existe' })
-      return
-    }
-
-    let clonedItem = {...foundItem}
-
-    delete clonedItem.password
-
-    res.json(clonedItem)
-  })
-  .put(methodAllowedForUsersAndAdmins, (req, res) => {
-
-    let userList = req.app.get('users')
-    let searchId = parseInt(req.params.id)
-
-    let foundItemIndex = userList.findIndex(item => item.id === searchId)
-
-    if (req.user.profile !== 'admin') {
-      foundItemIndex = userList.findIndex(item => item.id === searchId && item.id === req.user.id)
-    }
-
-    if (foundItemIndex === -1) {
-      res.status(404).json({ 'message': 'El elemento que intentas editar no existe' })
-      return
-    }
-
-    let updatedItem = userList[foundItemIndex]
-
-    delete req.body.id //evita que el id enviado como parte de los datos modifique el id del usuario
-
-    updatedItem = { ...updatedItem, ...req.body }
-
-    userList[foundItemIndex] = updatedItem
-    req.app.set('users', userList)
-
-    let clonedItem = {...updatedItem}
-
-    delete clonedItem.password
-
-    res.json(clonedItem)
-  })
-  .delete(methodAllowedForUsersAndAdmins, (req, res) => {
-    let userList = req.app.get('users')
-    let searchId = parseInt(req.params.id)
-
-    let foundItemIndex = userList.findIndex(item => item.id === searchId)
-
-    if (req.user.profile !== 'admin') {
-      foundItemIndex = userList.findIndex(item => item.id === searchId && item.id === req.user.id)
-    }
-
-    if (foundItemIndex === -1) {
+      console.info(searchId, "No encontrado")
       res.status(404).json({ 'message': 'El elemento que intentas eliminar no existe' })
       return
     }
 
-    userList.splice(foundItemIndex, 1)
-    req.app.set('users', userList)
+    let foundUser = foundItem.toJSON()
+    delete foundUser.password
+
+    res.json(foundUser)
+  })
+  .put(methodAllowedForUsersAndAdmins, async (req, res) => {
+
+    let searchId = req.params.id
+    let filters = {$and: [{_id: searchId}]}
+
+    if (req.user.profile !== 'admin') {
+      filters.$and.push({_id: req.user.id})
+    }
+
+    let foundItem = await User.findOneAndUpdate(filters,req.body).exec()
+
+    if (!foundItem) {
+      res.status(404).json({ 'message': 'El elemento que intentas eliminar no existe' })
+      return
+    }
+
+    let foundUser = foundItem.toJSON()
+    delete foundUser.password
+
+    res.json(foundUser)
+  })
+  .delete(methodAllowedForUsersAndAdmins, async (req, res) => {
+    let searchId = req.params.id
+    let filters = {_id: searchId}
+
+    if (req.user.profile !== 'admin' && searchId !== req.user.id) {
+      res.status(403).json({ 'message': 'Permisos insuficientes' })
+      return
+    }
+
+    let foundItem = await User.findOneAndDelete(filters).exec()
+
+    if (!foundItem) {
+      res.status(404).json({ 'message': 'El elemento que intentas eliminar no existe' })
+      return
+    }
 
     res.status(204).json()
   })
