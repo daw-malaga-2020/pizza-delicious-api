@@ -24,14 +24,28 @@ router.route('/users')
 
     res.json(filteredList)
   })
+<<<<<<< HEAD
   .post(async (req, res) => {
+=======
+  .post((req, res) => {
+
+    let userList = req.app.get('users')
+
+    let newItem = { ...{ id: userList.length + 1 }, ...req.body }
+>>>>>>> 7375d07fca115f45c4b419322219f9ebc3fe89e7
 
     req.body.password = md5(req.body.password)
 
     let newItem = await new User(req.body).save()
 
+<<<<<<< HEAD
     let createdItem = newItem.toJSON()
     delete createdItem.password
+=======
+    newItem = {...newItem}
+
+    delete newItem.password
+>>>>>>> 7375d07fca115f45c4b419322219f9ebc3fe89e7
 
     res.status(201).json(createdItem)
 
@@ -55,8 +69,13 @@ router.route('/users/:id')
       return
     }
 
+<<<<<<< HEAD
     let foundUser = foundItem.toJSON()
     delete foundUser.password
+=======
+    foundItem = {...foundItem}
+    delete foundItem.password
+>>>>>>> 7375d07fca115f45c4b419322219f9ebc3fe89e7
 
     res.json(foundUser)
   })
