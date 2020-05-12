@@ -10,6 +10,7 @@ let itemSchema = new Schema({
   password: { type: String, required: true },
   profile: { type: String, required: false, default: 'user' },
   enabled: { type: Boolean, default: false },
+  bio: {type: String, required: false}
 });
 
 module.exports = itemSchema

@@ -1,3 +1,5 @@
+'use strict'
+
 const express = require('express')
 const router = express.Router()
 const md5 = require('md5')
@@ -14,7 +16,7 @@ router.route('/users')
   .get(methodAllowedOnlyForAdmins, async (req, res) => {
     let itemList = await User.find().exec()
 
-    filteredList = itemList.map((item) => {
+    let filteredList = itemList.map((item) => {
       let clonedItem = { ...item.toJSON() }
 
       delete clonedItem.password
@@ -24,28 +26,14 @@ router.route('/users')
 
     res.json(filteredList)
   })
-<<<<<<< HEAD
   .post(async (req, res) => {
-=======
-  .post((req, res) => {
-
-    let userList = req.app.get('users')
-
-    let newItem = { ...{ id: userList.length + 1 }, ...req.body }
->>>>>>> 7375d07fca115f45c4b419322219f9ebc3fe89e7
 
     req.body.password = md5(req.body.password)
 
     let newItem = await new User(req.body).save()
 
-<<<<<<< HEAD
     let createdItem = newItem.toJSON()
     delete createdItem.password
-=======
-    newItem = {...newItem}
-
-    delete newItem.password
->>>>>>> 7375d07fca115f45c4b419322219f9ebc3fe89e7
 
     res.status(201).json(createdItem)
 
@@ -69,26 +57,22 @@ router.route('/users/:id')
       return
     }
 
-<<<<<<< HEAD
     let foundUser = foundItem.toJSON()
     delete foundUser.password
-=======
-    foundItem = {...foundItem}
-    delete foundItem.password
->>>>>>> 7375d07fca115f45c4b419322219f9ebc3fe89e7
 
     res.json(foundUser)
   })
   .put(methodAllowedForUsersAndAdmins, async (req, res) => {
 
     let searchId = req.params.id
-    let filters = {$and: [{_id: searchId}]}
+    let filters = {_id: searchId}
 
-    if (req.user.profile !== 'admin') {
-      filters.$and.push({_id: req.user.id})
+    if (req.user.profile !== 'admin' && searchId !== req.user.id) {
+      res.status(403).json({ 'message': 'Permisos insuficientes' })
+      return
     }
 
-    let foundItem = await User.findOneAndUpdate(filters,req.body).exec()
+    let foundItem = await User.findOneAndUpdate(filters,req.body, {new: true}).exec()
 
     if (!foundItem) {
       res.status(404).json({ 'message': 'El elemento que intentas eliminar no existe' })

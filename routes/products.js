@@ -7,9 +7,19 @@ const authMiddleware = require('../middlewares/authentication')
 //middleware configurable para usar el método sólo administradores
 const methodAllowedOnlyForAdmins = authMiddleware(['admin'], true)
 
+const methodAllowedAuthOptional = authMiddleware(['user','admin'], false)
+
 router.route('/products')
-  .get(async (req, res) => {
-    let itemList = await Products.find().exec()
+  .get(methodAllowedAuthOptional, async (req, res) => {
+    let filters = {}
+
+    //OBJETIVO: Si un usuario no autenticado o usuario autenticado pero que no tiene el perfil admin entonces devolver solo los productos visibles
+    // Si el usuario no es admin -> añadir filtro para devolver sólo productos enabled === true
+    if(!req.user){
+      filters.enabled = true
+    }
+
+    let itemList = await Products.find(filters).exec()
 
     res.json(itemList)
   })

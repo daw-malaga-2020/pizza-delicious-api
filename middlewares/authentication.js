@@ -17,6 +17,7 @@ function authenticationVerify(allowedProfiles, authRequired = true) {
 
     if (!authRequired && !req.token) {
       next()
+      return
     }
 
     if (!req.token) {
@@ -27,6 +28,7 @@ function authenticationVerify(allowedProfiles, authRequired = true) {
     jwt.verify(req.token, config.APP_SECRET, (err, tokenData) => {
 
       if (err) {
+        console.info(err)
         res.status(401).json({ 'message': 'La sesión ha sido cerrado. Identifícate de nuevo.' })
         return
       }
